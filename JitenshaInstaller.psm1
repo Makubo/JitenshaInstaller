@@ -30,4 +30,3 @@ Export-ModuleMember -Variable 'Icon'
 . (Join-Path -Path $PSScriptRoot -ChildPath '\public\Run-JitenshaInstaller.ps1')
 
 Export-ModuleMember -Function 'Run-JitenshaInstaller'
-
