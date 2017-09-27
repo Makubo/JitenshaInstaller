@@ -4,6 +4,8 @@
     $DebugPreference = "Continue"
     $VerbosePreference = "Continue"
 
+    Write-JitenshaEvent -Message "Jitensha Installer is started`nWindows version: $([System.Environment]::OSVersion.Version)`nPowershell version: $($PSVersionTable.PSVersion.ToString())" -EntryType "Information" -EventId 0
+
     # Workaround for Powershell 2.0
     #if ($PSScriptRoot -eq $null) {
     #    Write-Host Setting $`PSScriptRoot variable
@@ -51,6 +53,10 @@
         $Package = Get-JitenshaInstallerVersion $Package
    
     }
+    
+    ForEach ($Package in $PackageList) {
+        $Package | Format-Table
+    }
 
     ForEach ($Package in $PackageList) {
     
@@ -66,8 +72,7 @@
             Continue
         }
 
-
-        if ($Package.Installed){
+        if ($Package.Installed) {
             if ($Package.Autoupdate) {
                 $NotifyIcon.BalloonTipText = "Update $($Package.Name)"
                 $NotifyIcon.ShowBalloonTip(2)
@@ -79,7 +84,9 @@
                 foreach ($ConflictPackageName in $Package.Conflict) {
                     foreach ($ConflictPackage in $PackageList) {
                         if ($ConflictPackage.Name -eq $ConflictPackageName -and $ConflictPackage.Installed) {
-                            Write-Warning "$($Package.Name): installation is conflict with installed $ConflictPackageName"
+                            $Warning = "$($Package.Name): installation is conflict with installed $ConflictPackageName"
+                            Write-Warning $Warning
+                            Write-JitenshaEvent -Message $Warning -EntryType "Warning" -EventId 0
                             $Conflict = $true
                         }
                     }
@@ -94,10 +101,7 @@
     }
     $NotifyIcon.Visible = $False
 
-    ForEach ($Package in $PackageList) {
-        $Package | Format-Table
-    }
-
+    Write-JitenshaEvent -Message "Jitensha Installer's job is done" -EntryType "Information" -EventId 0
 }
 
 #Run-JitenshaInstaller
