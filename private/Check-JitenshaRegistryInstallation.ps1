@@ -13,7 +13,7 @@
     }
     $ErrorActionPreference = "Continue"
 
-    if (!$Installation -and [System.Environment]::Is64BitOperatingSystem){
+    if (!$Installation -and $Is64Bit){
         Write-Debug "$($Package.Name): Search installation information in $Regx86"
         $ErrorActionPreference = "SilentlyContinue"
         $Installation = Foreach ($i in (Get-ChildItem -path "Registry::$Regx86")) {

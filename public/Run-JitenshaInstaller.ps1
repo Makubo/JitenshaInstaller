@@ -38,7 +38,7 @@
 # End of creation tray icon
 
     $WindowsVersion = [System.Environment]::OSVersion.Version
-    $Is64Bit = [System.Environment]::Is64BitOperatingSystem
+    $Is64Bit = [IntPtr]::Size -eq 8
 
     $PackageList = New-Object System.Collections.ArrayList
     $PackageList = Get-JitenshaPackageList
@@ -68,7 +68,7 @@
             Continue
         }
 
-        if ($Package.WinVersion -and $Package.WinVersion -ne ("$($WindowsVersion.Major).$($WindowsVersion.Minor)")) {
+        if ($Package.WinVersion -and $Package.WinVersion -ne "$($WindowsVersion.Major).$($WindowsVersion.Minor)") {
             Continue
         }
 
@@ -86,7 +86,7 @@
                         if ($ConflictPackage.Name -eq $ConflictPackageName -and $ConflictPackage.Installed) {
                             $Warning = "$($Package.Name): installation is conflict with installed $ConflictPackageName"
                             Write-Warning $Warning
-                            Write-JitenshaEvent -Message $Warning -EntryType "Warning" -EventId 0
+                            Write-JitenshaEvent -Message $Warning -EntryType "Warning" -EventId 10
                             $Conflict = $true
                         }
                     }
